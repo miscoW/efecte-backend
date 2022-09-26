@@ -18,15 +18,6 @@ import static org.hamcrest.CoreMatchers.is;
 class NotesRestControllerTest {
 
     @Test
-    public void testDemoEndpoint() {
-        given()
-                .when().get("/api/note/demo")
-                .then()
-                .statusCode(200)
-                .body(is("aaa"));
-    }
-
-    @Test
     public void saveNote() throws JSONException {
         String content = "test content";
         JSONObject requestParams = new JSONObject();
