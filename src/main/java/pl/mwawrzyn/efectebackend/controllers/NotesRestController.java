@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
 import pl.mwawrzyn.efectebackend.services.NoteRestService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/note")
@@ -21,6 +23,10 @@ public class NotesRestController {
         return "aaa";
     }
 
+    @GetMapping("")
+    public List<Note> getAllNotes() {
+        return noteRestService.getAllNotes();
+    }
 
     @PostMapping("")
     public Note saveNote(@RequestBody Note note) {

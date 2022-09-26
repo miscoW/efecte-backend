@@ -28,14 +28,13 @@ class NotesRestControllerTest {
 
     @Test
     public void saveNote() throws JSONException {
-        // given
         String content = "test content";
         JSONObject requestParams = new JSONObject();
         requestParams.put("content", content);
 
         JSONObject expectedResponse = new JSONObject();
         expectedResponse.put("content", content);
-        expectedResponse.put("id", 0);
+        expectedResponse.put("id", 1);
 
         given()
                 .when()
@@ -45,5 +44,19 @@ class NotesRestControllerTest {
                 .then()
                 .statusCode(200)
                 .body(is(expectedResponse.toString()));
+    }
+
+    @Test
+    public void getAllNotes() throws JSONException {
+        String content = "test content";
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("content", content);
+        expectedResponse.put("id", 1);
+
+        given()
+                .when().get("/api/note")
+                .then()
+                .statusCode(200)
+                .body(is("[{\"id\":1,\"content\":\"test content\"}]")); // todo make tests independent
     }
 }
