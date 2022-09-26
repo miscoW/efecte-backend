@@ -41,4 +41,8 @@ public class NotesRestController {
            return noteRestService.edit(note);
     }
 
+    @GetMapping("/search")
+    public List<Note> searchNotes(@RequestParam(name = "text") String text) {
+        return noteRestService.searchByString(text);
+    }
 }
