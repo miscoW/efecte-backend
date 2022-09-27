@@ -45,4 +45,9 @@ public class NotesRestController {
     public List<Note> searchNotes(@RequestParam(name = "text") String text) {
         return noteRestService.searchByString(text);
     }
+
+    @PostMapping("/delete")
+    public Note removeNote(@RequestBody Note note) {
+        return noteRestService.deleteNote(note);
+    }
 }

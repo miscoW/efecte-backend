@@ -51,6 +51,12 @@ public class NoteRestService {
         }
     }
 
+    public Note deleteNote(Note note) {
+        Note entity = noteCrudDao.findById(note.getId()).get();
+        noteCrudDao.delete(note);
+        return note;
+    }
+
     public List<Note> searchByString(String text) {
         return noteQueriesDao.findByPartOfContent(text);
     }
