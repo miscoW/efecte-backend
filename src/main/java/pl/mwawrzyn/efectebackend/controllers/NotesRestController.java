@@ -2,6 +2,7 @@ package pl.mwawrzyn.efectebackend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
 import pl.mwawrzyn.efectebackend.models.exception.ElementNotFoundException;
 import pl.mwawrzyn.efectebackend.models.exception.TooLongNoteException;
@@ -22,22 +23,22 @@ public class NotesRestController {
     }
 
     @GetMapping("")
-    public List<Note> getAllNotes() {
+    public List<NoteDto> getAllNotes() {
         return noteRestService.getAllNotes();
     }
 
     @PostMapping("")
-    public Note saveNote(@RequestBody Note note) throws TooLongNoteException {
+    public NoteDto saveNote(@RequestBody NoteDto note) throws TooLongNoteException {
         return noteRestService.saveNote(note);
     }
 
     @GetMapping("/{id}")
-    public Note getNoteById(@PathVariable("id") Long id) throws ElementNotFoundException {
+    public NoteDto getNoteById(@PathVariable("id") Long id) throws ElementNotFoundException {
         return noteRestService.getNoteById(id);
     }
 
     @PostMapping("/edit")
-    public Note editNote(@RequestBody Note note) throws ElementNotFoundException {
+    public NoteDto editNote(@RequestBody NoteDto note) throws ElementNotFoundException {
            return noteRestService.edit(note);
     }
 
@@ -47,7 +48,7 @@ public class NotesRestController {
     }
 
     @PostMapping("/delete")
-    public Note removeNote(@RequestBody Note note) {
+    public NoteDto removeNote(@RequestBody NoteDto note) throws ElementNotFoundException {
         return noteRestService.deleteNote(note);
     }
 }

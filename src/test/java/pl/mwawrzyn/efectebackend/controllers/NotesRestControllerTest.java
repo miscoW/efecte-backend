@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
 
 
@@ -24,13 +25,13 @@ class NotesRestControllerTest {
 
     @BeforeEach
     public void cleanDatabaseAndAddTwoNotes() throws JSONException {
-        Note[] allNotesBefore = given()
+        NoteDto[] allNotesBefore = given()
                 .when().get("/api/note")
                 .then()
                 .statusCode(200)
-                .extract().as(Note[].class);
+                .extract().as(NoteDto[].class);
 
-        for(Note note : allNotesBefore) {
+        for(NoteDto note : allNotesBefore) {
             removeNote(note);
         }
 
@@ -45,19 +46,19 @@ class NotesRestControllerTest {
         JSONObject requestParams = new JSONObject();
         requestParams.put("content", content);
 
-        Note expectedNote = new Note();
+        NoteDto expectedNote = new NoteDto();
         expectedNote.setId(3L);
         expectedNote.setContent(content);
         expectedNote.setVersion(0);
 
-        Note response = given()
+        NoteDto response = given()
                 .when()
                 .body(requestParams.toString())
                 .contentType(ContentType.JSON)
                 .post("/api/note")
                 .then()
                 .statusCode(200)
-                .extract().as(Note.class);
+                .extract().as(NoteDto.class);
 
 
         assertEquals(expectedNote, response);
@@ -68,11 +69,11 @@ class NotesRestControllerTest {
         //given
 
         //when
-        Note[] response = given()
+        NoteDto[] response = given()
                 .when().get("/api/note")
                 .then()
                 .statusCode(200)
-                .extract().as(Note[].class);
+                .extract().as(NoteDto[].class);
 
         //then
         assertEquals(2, response.length);
@@ -98,7 +99,7 @@ class NotesRestControllerTest {
                 .statusCode(400);
     }
 
-    private void removeNote(Note note) throws JSONException {
+    private void removeNote(NoteDto note) throws JSONException {
         JSONObject requestParams = new JSONObject();
         requestParams.put("content", note.getContent());
         requestParams.put("id", note.getId());
