@@ -33,6 +33,6 @@ public class GlobalExceptionHandler {
         ErrorDto response = new ErrorDto();
         response.setErrorCode(HttpStatus.NOT_FOUND.value());
         response.setMassage(exception.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

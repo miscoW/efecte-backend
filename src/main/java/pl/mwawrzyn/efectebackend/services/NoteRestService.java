@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import pl.mwawrzyn.efectebackend.daos.NoteDao;
 import pl.mwawrzyn.efectebackend.daos.NoteQueriesDao;
 import pl.mwawrzyn.efectebackend.mapper.NoteMapper;
+import pl.mwawrzyn.efectebackend.models.dto.NoteContent;
 import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
+import pl.mwawrzyn.efectebackend.models.exception.ElementAlreadySaved;
 import pl.mwawrzyn.efectebackend.models.exception.ElementNotFoundException;
 import pl.mwawrzyn.efectebackend.models.exception.TooLongNoteException;
 
@@ -29,13 +31,14 @@ public class NoteRestService {
         this.noteMapper = noteMapper;
     }
 
-    public NoteDto saveNote(NoteDto noteDto) throws TooLongNoteException {
-        if(noteDto.getContent().length() >= 200) {
-            throw new TooLongNoteException("New note too long, max size 200");
-        }
-        Note entity = noteMapper.noteDtoToNote(noteDto);
-        entity =  noteCrudDao.save(entity);
-        return noteMapper.noteToNoteDto(entity);
+    public NoteDto saveNote(NoteContent noteDto) throws TooLongNoteException, ElementAlreadySaved {
+            if(noteDto.getContent().length() >= 200) {
+                throw new TooLongNoteException("New note too long, max size 200");
+            }
+            Note entity = new Note();
+            entity.setContent(noteDto.getContent());
+            entity =  noteCrudDao.save(entity);
+            return noteMapper.noteToNoteDto(entity);
     }
 
     public List<NoteDto> getAllNotes() {
@@ -76,7 +79,7 @@ public class NoteRestService {
         }
     }
 
-    public List<Note> searchByString(String text) {
-        return noteQueriesDao.findByPartOfContent(text);
+    public List<NoteDto> searchByString(String text) {
+        return noteMapper.noteListToNoteDtoList(noteQueriesDao.findByPartOfContent(text));
     }
 }
