@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
-import pl.mwawrzyn.efectebackend.models.entity.Note;
 
 
 import java.util.List;
@@ -61,7 +60,26 @@ class NotesRestControllerTest {
                 .extract().as(NoteDto.class);
 
 
-        assertEquals(expectedNote, response);
+        assertEquals(expectedNote.getId(), response.getId());
+        assertEquals(expectedNote.getVersion(), response.getVersion());
+        assertEquals(expectedNote.getContent(), response.getContent());
+    }
+
+    @Test
+    public void saveTooLongNote() throws JSONException {
+        String content = "tooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTexttooLongTe Total 201 long";
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("content", content);
+
+        given()
+                .when()
+                .body(requestParams.toString())
+                .contentType(ContentType.JSON)
+                .post("/api/note")
+                .then()
+                .statusCode(400);
+
+
     }
 
     @Test
@@ -81,9 +99,98 @@ class NotesRestControllerTest {
     }
 
     @Test
-    public void optiomisticLocking() throws JSONException {
+    public void getOneNotes() throws JSONException {
+        //given
+        NoteDto[] data = given()
+                .when().get("/api/note")
+                .then()
+                .statusCode(200)
+                .extract().as(NoteDto[].class);
+
+        Long id = data[0].getId();
+
+        NoteDto expectedNote = new NoteDto();
+        expectedNote.setId(id);
+        expectedNote.setContent("test content1");
+        expectedNote.setVersion(0);
+
+        //when
+        NoteDto response = given()
+                .when().get("/api/note/" + id)
+                .then()
+                .statusCode(200)
+                .extract().as(NoteDto.class);
+
+        //then
+        assertEquals(expectedNote.getId(), response.getId());
+        assertEquals(expectedNote.getVersion(), response.getVersion());
+        assertEquals(expectedNote.getContent(), response.getContent());
+    }
+
+    @Test
+    public void getOneNotes404() throws JSONException {
+        //given
+        //when
+        given()
+                .when().get("/api/note/101")
+                .then()
+                .statusCode(404);
+        //then
+
+    }
+
+    @Test
+    public void editNote() throws JSONException {
+        //given
+        NoteDto[] data = given()
+                .when().get("/api/note")
+                .then()
+                .statusCode(200)
+                .extract().as(NoteDto[].class);
+
+        Long id = data[0].getId();
+
+        NoteDto expectedNote = new NoteDto();
+        expectedNote.setId(id);
+        expectedNote.setContent("test content");
+        expectedNote.setVersion(1);
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("content", "test content");
+        requestParams.put("id", id);
+        requestParams.put("version", 0);
+        //given
+
+
+        //when
+        given()
+                .when()
+                .body(requestParams.toString())
+                .contentType(ContentType.JSON)
+                .post("/api/note/edit")
+                .then()
+                .statusCode(200);
+
+        //then
+        NoteDto result = given()
+                .when().get("/api/note/" + id)
+                .then()
+                .statusCode(200)
+                .extract().as(NoteDto.class);
+        assertEquals(expectedNote.getId(), result.getId());
+        assertEquals(expectedNote.getVersion(), result.getVersion());
+        assertEquals(expectedNote.getContent(), result.getContent());
+
+    }
+    @Test
+    public void editOptiomisticLocking() throws JSONException {
+        NoteDto[] data = given()
+                .when().get("/api/note")
+                .then()
+                .statusCode(200)
+                .extract().as(NoteDto[].class);
+
+        Long id = data[0].getId();
         String content = "test content";
-        Long id = 1L;
         int version = 10;
         JSONObject requestParams = new JSONObject();
         requestParams.put("content", content);
