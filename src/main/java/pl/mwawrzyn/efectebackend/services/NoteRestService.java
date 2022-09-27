@@ -24,7 +24,7 @@ public class NoteRestService {
     }
 
     public Note saveNote(Note note) throws TooLongNoteException {
-        if(note.getContent().length() > 200) {
+        if(note.getContent().length() >= 200) {
             throw new TooLongNoteException();
         }
         return noteCrudDao.save(note);
