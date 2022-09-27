@@ -25,7 +25,7 @@ public class NoteRestService {
 
     public Note saveNote(Note note) throws TooLongNoteException {
         if(note.getContent().length() >= 200) {
-            throw new TooLongNoteException();
+            throw new TooLongNoteException("New note too long, max size 200");
         }
         return noteCrudDao.save(note);
     }
@@ -39,7 +39,7 @@ public class NoteRestService {
        if(optional.isPresent()) {
            return optional.get();
        } else {
-           throw new ElementNotFoundException();
+           throw new ElementNotFoundException("Element with id " + id + " not found");
        }
     }
 
@@ -47,7 +47,7 @@ public class NoteRestService {
         if(noteCrudDao.findById(note.getId()).isPresent()) {
             return noteCrudDao.save(note);
         } else {
-            throw new ElementNotFoundException();
+            throw new ElementNotFoundException("Element with id " + note.getId() + " not found");
         }
     }
 

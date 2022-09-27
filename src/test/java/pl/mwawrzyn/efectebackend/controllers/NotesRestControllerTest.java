@@ -50,4 +50,23 @@ class NotesRestControllerTest {
                 .statusCode(200)
                 .body(is("[{\"id\":1,\"content\":\"test content\"}]")); // todo make tests independent
     }
+
+    @Test
+    public void optiomisticLocking() throws JSONException {
+        String content = "test content";
+        Long id = 1L;
+        int version = 10;
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("content", content);
+        requestParams.put("id", id);
+        requestParams.put("version", version);
+
+        given()
+                .when()
+                .body(requestParams.toString())
+                .contentType(ContentType.JSON)
+                .post("/api/note/edit")
+                .then()
+                .statusCode(400);
+    }
 }
