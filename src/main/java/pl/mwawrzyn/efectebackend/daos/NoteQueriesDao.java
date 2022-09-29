@@ -14,7 +14,7 @@ public class NoteQueriesDao {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private QNote note = QNote.note;
+    private final QNote note = QNote.note;
 
     public List<Note> findByPartOfContent(String searchedText) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);

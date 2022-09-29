@@ -10,7 +10,6 @@ import pl.mwawrzyn.efectebackend.models.dto.NoteContent;
 import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
 import pl.mwawrzyn.efectebackend.models.exception.BlankNoteException;
-import pl.mwawrzyn.efectebackend.models.exception.ElementAlreadySaved;
 import pl.mwawrzyn.efectebackend.models.exception.ElementNotFoundException;
 import pl.mwawrzyn.efectebackend.models.exception.TooLongNoteException;
 
@@ -32,7 +31,7 @@ public class NoteRestService {
         this.noteMapper = noteMapper;
     }
 
-    public NoteDto saveNote(NoteContent noteDto) throws TooLongNoteException, ElementAlreadySaved, BlankNoteException {
+    public NoteDto saveNote(NoteContent noteDto) throws TooLongNoteException, BlankNoteException {
             if(noteDto.getContent().length() >= 200) {
                 throw new TooLongNoteException("New note too long, max size 200");
             }

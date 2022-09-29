@@ -83,7 +83,7 @@ class NotesRestControllerTest {
     }
 
     @Test
-    public void getAllNotes() throws JSONException {
+    public void getAllNotes() {
         //given
 
         //when
@@ -99,7 +99,7 @@ class NotesRestControllerTest {
     }
 
     @Test
-    public void getOneNote() throws JSONException {
+    public void getOneNote() {
         //given
         NoteDto[] data = given()
                 .when().get("/api/note")
@@ -128,7 +128,7 @@ class NotesRestControllerTest {
     }
 
     @Test
-    public void getOneNotes404() throws JSONException {
+    public void getOneNotes404() {
         //given
         //when
         given()

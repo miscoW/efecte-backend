@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Service
 public class NoteMapper {
 
-    private static ModelMapper modelMapper = new ModelMapper();
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     public NoteDto noteToNoteDto(Note note) {
         return modelMapper.map(note, NoteDto.class);
