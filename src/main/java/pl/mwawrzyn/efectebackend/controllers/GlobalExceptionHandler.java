@@ -6,6 +6,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.mwawrzyn.efectebackend.models.dto.ErrorDto;
+import pl.mwawrzyn.efectebackend.models.exception.BlankNoteException;
 import pl.mwawrzyn.efectebackend.models.exception.ElementNotFoundException;
 import pl.mwawrzyn.efectebackend.models.exception.TooLongNoteException;
 
@@ -20,8 +21,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = TooLongNoteException.class)
-    public ResponseEntity<Object> handleTooLongNote(TooLongNoteException exception) {
+    @ExceptionHandler(value = {TooLongNoteException.class, BlankNoteException.class})
+    public ResponseEntity<Object> handleBadRequestExceptions(Exception exception) {
         ErrorDto response = new ErrorDto();
         response.setErrorCode(HttpStatus.BAD_REQUEST.value());
         response.setMassage(exception.getMessage());

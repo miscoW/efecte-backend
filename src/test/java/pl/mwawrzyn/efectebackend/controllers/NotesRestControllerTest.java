@@ -99,7 +99,7 @@ class NotesRestControllerTest {
     }
 
     @Test
-    public void getOneNotes() throws JSONException {
+    public void getOneNote() throws JSONException {
         //given
         NoteDto[] data = given()
                 .when().get("/api/note")
@@ -111,7 +111,7 @@ class NotesRestControllerTest {
 
         NoteDto expectedNote = new NoteDto();
         expectedNote.setId(id);
-        expectedNote.setContent("test content1");
+        expectedNote.setContent("test content2");
         expectedNote.setVersion(0);
 
         //when

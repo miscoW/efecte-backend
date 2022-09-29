@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.mwawrzyn.efectebackend.models.dto.NoteContent;
 import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
+import pl.mwawrzyn.efectebackend.models.exception.BlankNoteException;
 import pl.mwawrzyn.efectebackend.models.exception.ElementAlreadySaved;
 import pl.mwawrzyn.efectebackend.models.exception.ElementNotFoundException;
 import pl.mwawrzyn.efectebackend.models.exception.TooLongNoteException;
@@ -31,7 +32,7 @@ public class NotesRestController {
     }
 
     @PostMapping("")
-    public NoteDto saveNote(@RequestBody NoteContent note) throws TooLongNoteException, ElementAlreadySaved {
+    public NoteDto saveNote(@RequestBody NoteContent note) throws TooLongNoteException, ElementAlreadySaved, BlankNoteException {
         return noteRestService.saveNote(note);
     }
 

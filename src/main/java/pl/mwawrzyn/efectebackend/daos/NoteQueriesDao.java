@@ -21,6 +21,15 @@ public class NoteQueriesDao {
         return queryFactory
                 .selectFrom(note)
                 .where(note.content.containsIgnoreCase(searchedText))
+                .orderBy(note.modificationDate.desc())
+                .fetch();
+    }
+
+    public List<Note> findAllStartingWithNewest() {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        return queryFactory
+                .selectFrom(note)
+                .orderBy(note.modificationDate.desc())
                 .fetch();
     }
 }

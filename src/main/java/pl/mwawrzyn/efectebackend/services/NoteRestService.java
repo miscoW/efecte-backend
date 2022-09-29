@@ -9,6 +9,7 @@ import pl.mwawrzyn.efectebackend.mapper.NoteMapper;
 import pl.mwawrzyn.efectebackend.models.dto.NoteContent;
 import pl.mwawrzyn.efectebackend.models.dto.NoteDto;
 import pl.mwawrzyn.efectebackend.models.entity.Note;
+import pl.mwawrzyn.efectebackend.models.exception.BlankNoteException;
 import pl.mwawrzyn.efectebackend.models.exception.ElementAlreadySaved;
 import pl.mwawrzyn.efectebackend.models.exception.ElementNotFoundException;
 import pl.mwawrzyn.efectebackend.models.exception.TooLongNoteException;
@@ -31,19 +32,21 @@ public class NoteRestService {
         this.noteMapper = noteMapper;
     }
 
-    public NoteDto saveNote(NoteContent noteDto) throws TooLongNoteException, ElementAlreadySaved {
+    public NoteDto saveNote(NoteContent noteDto) throws TooLongNoteException, ElementAlreadySaved, BlankNoteException {
             if(noteDto.getContent().length() >= 200) {
                 throw new TooLongNoteException("New note too long, max size 200");
             }
+            if(noteDto.getContent().trim().length() == 0) {
+                throw new BlankNoteException("Note cannot be blank");
+            }
             Note entity = new Note();
-            entity.setContent(noteDto.getContent());
+            entity.setContent(noteDto.getContent().trim());
             entity =  noteCrudDao.save(entity);
             return noteMapper.noteToNoteDto(entity);
     }
 
     public List<NoteDto> getAllNotes() {
-        return noteMapper.noteListToNoteDtoList(
-                (List<Note>) noteCrudDao.findAll());
+        return noteMapper.noteListToNoteDtoList(noteQueriesDao.findAllStartingWithNewest());
     }
 
     public NoteDto getNoteById(Long id) throws ElementNotFoundException {
@@ -80,6 +83,6 @@ public class NoteRestService {
     }
 
     public List<NoteDto> searchByString(String text) {
-        return noteMapper.noteListToNoteDtoList(noteQueriesDao.findByPartOfContent(text));
+        return noteMapper.noteListToNoteDtoList(noteQueriesDao.findByPartOfContent(text.trim()));
     }
 }
